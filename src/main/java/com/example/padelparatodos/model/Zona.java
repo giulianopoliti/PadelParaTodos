@@ -15,8 +15,8 @@ import java.util.Map;
 @Setter
 public class Zona {
     private Torneo torneo;
-    HashMap <Integer, Pareja> jugadores = new HashMap<>();
-    HashMap<Integer, Partido> partidos = new HashMap<>();
+    private HashMap <Integer, Pareja> jugadores = new HashMap<>();
+    private List<PartidoDTO> partidos = new ArrayList<>();
     public Zona(Torneo torneo) {
         this.jugadores = new HashMap<>();
         this.torneo = torneo;
@@ -28,23 +28,21 @@ public class Zona {
     public void setearPartidos (List<PartidoDTO> partidosTerminados) {
         this.partidos = partidosTerminados;
     }
-    public void sumarPunto (Partido partido, Pareja pareja) {
+    /*public void sumarPunto (Partido partido, Pareja pareja) {
         for (int i = 0; i < partidos.size(); i++) {
             if (partidos.get(i).equals(partido)) {
                 partidos.get(i).sumarPunto(pareja);
                 return;
             }
         }
-    }
+    }*/
     public void setearPartido (PartidoDTO partidoDTO) {
-        for (Map.Entry<Integer, Partido> entry : partidos.entrySet()) {
-            if (entry.getValue().getPareja1().equals(partidoDTO.getPareja1()) &&
-                    entry.getValue().getPareja2().equals(partidoDTO.getPareja2())) {
-                Partido partido = entry.getValue();
-                partido.setResultado();
-                partidos.put(entry.getKey(), )
+        for (PartidoDTO partido : partidos) {
+            if (partido.getPareja1().equals(partidoDTO.getPareja1()) &&
+                    partido.getPareja2().equals(partidoDTO.getPareja2())) {
+                //
+                //partidos.put(entry.getKey(), )
             }
         }
     }
-
 }

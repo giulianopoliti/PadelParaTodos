@@ -70,7 +70,7 @@ public class Torneo {
         }
         return this.zonas;
     }
-    public void setearResultadosZona (List<Partido> partidosZona, int zona) {
+    public void setearResultadosZona (List<PartidoDTO> partidosZona, int zona) {
         zonas.get(zona).setearPartidos(partidosZona);
     }
     public void setearPartidoZona (PartidoDTO partidoDTO) {
