@@ -9,15 +9,18 @@ public class PartidoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     @ManyToOne
-    @JoinColumn(name = "pareja_Id")
+    @JoinColumn (name = "pareja1_id")
     private ParejaEntity pareja1;
     @ManyToOne
-    @JoinColumn(name = "pareja_Id")
+    @JoinColumn (name = "pareja2_id")
     private ParejaEntity pareja2;
+
     @ManyToOne
-    @JoinColumn(name = "pareja_Id")
+    @JoinColumn
     private ParejaEntity ganador;
+
     @ManyToOne
     @JoinColumn(name = "torneo_Id")
     private TorneoEntity torneoEntity;

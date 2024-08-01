@@ -11,9 +11,7 @@ import com.example.padelparatodos.service.JugadorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/torneo")
@@ -27,6 +25,29 @@ public class TorneoController {
         this.categoriaService = categoriaService;
     }
 
+    private HashMap<Integer, Pareja> ordenarParejas(HashMap<Integer, Pareja> zonas) {
+        // Convertir el HashMap en una lista de entradas (pares clave-valor)
+        List<Map.Entry<Integer, Pareja>> list = new ArrayList<>(zonas.entrySet());
+
+        // Ordenar la lista de entradas en función de la suma de los puntajes de los jugadores
+        list.sort((entry1, entry2) -> {
+            Pareja pareja1 = entry1.getValue();
+            Pareja pareja2 = entry2.getValue();
+
+            int score1 = pareja1.getJugador1().getScore() + pareja1.getJugador2().getScore();
+            int score2 = pareja2.getJugador1().getScore() + pareja2.getJugador2().getScore();
+
+            return Integer.compare(score1, score2); // Orden descendente
+        });
+
+        // Crear un LinkedHashMap para mantener el orden de las parejas ordenadas
+        HashMap<Integer, Pareja> sortedMap = new LinkedHashMap<>();
+        for (Map.Entry<Integer, Pareja> entry : list) {
+            sortedMap.put(entry.getKey(), entry.getValue());
+        }
+
+        return sortedMap;
+    }
 
     @PostMapping("/crear")
     public Torneo crearTorneo (@RequestBody Map<String, Object> request) {
@@ -43,6 +64,7 @@ public class TorneoController {
             parejas.put(count,new Pareja(jugadorEntity1,jugadorEntity2));
             count++;
         }
+        parejas = ordenarParejas(parejas);
         CategoriaEntity categoriaEntity = categoriaService.buscarCategoria(idCategoria);
         this.torneo = new Torneo(parejas,categoriaEntity,null);
         torneo.crearZonas();
