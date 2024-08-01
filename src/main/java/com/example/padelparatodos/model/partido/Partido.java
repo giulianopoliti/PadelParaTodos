@@ -1,5 +1,6 @@
 package com.example.padelparatodos.model.partido;
 
+import com.example.padelparatodos.model.ParejaDTO;
 import com.example.padelparatodos.model.categorias.Categoria;
 import com.example.padelparatodos.model.Pareja;
 import com.example.padelparatodos.model.torneo.Torneo;
@@ -21,9 +22,10 @@ public class Partido {
     private Torneo torneo;
     private Pareja pareja1;
     private Pareja pareja2;
-    @Getter
-    private HashMap<Pareja, Integer> resultado;
+    private List<Integer> setsPareja1;
+    private List<Integer> setsPareja2;
     private Set setEnCurso;
+    private Pareja ganador;
 
     public Partido(Torneo torneo, Pareja pareja1, Pareja pareja2, int setsAJugar) {
         this.torneo = torneo;
@@ -41,40 +43,50 @@ public class Partido {
     }
 
     public void iniciarPartido (){
+        List<Integer> setsPareja1 = new ArrayList<>();
+        List<Integer> setsPareja2 = new ArrayList<>();
+        HashMap<Pareja, List<Integer>> resultado = new HashMap<>();
+        resultado.put(this.pareja1, setsPareja1);
+        resultado.put(this.pareja2, setsPareja2);
         this.partidoState = new PartidoEnCurso(this);
+    }
+    public void iniciarSet () {
+        setsPareja1.add(0);
+        setsPareja2.add(0);
     }
     public void finalizarPartido (){
         this.partidoState = new PartidoFinalizado(this);
     }
-    public HashMap<Pareja, Integer> iniciarSet () {
-        Set setEnCurso = new Set(this.getPareja1(), this.getPareja2());
-        this.setSetEnCurso(setEnCurso);
-        HashMap<Pareja, Integer> resultado = new HashMap<>();
-        resultado.put(this.pareja1, setEnCurso.getGamesPareja1());
-        resultado.put(this.pareja1, setEnCurso.getGamesPareja2());
-        return resultado;
-    }
+
     public void sumarPunto (Pareja pareja) {
         this.setEnCurso.sumarPunto(pareja);
         if (this.setEnCurso.isSetWon()) {
-            setEnCurso.sumarPunto(pareja);
-            resultado.put(this.pareja1, setEnCurso.getGamesPareja1());
-            resultado.put(this.pareja2, setEnCurso.getGamesPareja2());
+            iniciarSet();
         }
     }
-    public boolean isPartidoWon (){
-        if (this.resultado.get(this.pareja1) == setsAJugar ||
-                this.resultado.get(this.pareja2) == setsAJugar) {
+    public boolean isPartidoWon (){ // REVEER
+        int count1 = 0;
+        int count2 = 0;
+        if ((setsPareja1.size() == setsAJugar || setsPareja2.size() == setsAJugar) &&
+                setEnCurso.isSetWon()) {
             return true;
         } else return false;
+
     }
     public Pareja whoWonPartido () {
-        if (this.resultado.get(this.pareja1) == setsAJugar) {
-            return this.getPareja1();
-        } else return this.getPareja2();
+        if (isPartidoWon()) {
+            if (setsPareja1.get(setsAJugar) == 7 ||
+                    (setsPareja1.get(setsAJugar) == 6 && setsPareja2.get(setsAJugar) <= 4)) {
+                return this.pareja1;
+            } else return this.pareja2;
+        } throw new RuntimeException("Ninguno gano el partido");
     }
     public void setResultado (PartidoDTO partidoDTO) {
-        this.resultado.put(partidoDTO.getPareja1(), partidoDTO.getSetsPareja1());
-        this.resultado.put(partidoDTO.getPareja2(), partidoDTO.getSetsPareja2());
+        this.setsPareja1 = partidoDTO.getSetsPareja1();
+        this.setsPareja2 = partidoDTO.getSetsPareja2();
+        if (whoWonPartido().equals(this.pareja1)) {
+            this.ganador = this.pareja1;
+        } else this.ganador = this.pareja2;
+        finalizarPartido();
     }
 }

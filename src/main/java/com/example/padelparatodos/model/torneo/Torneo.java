@@ -70,15 +70,12 @@ public class Torneo {
         }
         return this.zonas;
     }
-    public void setearResultadosZona (List<PartidoDTO> partidosZona, int zona) {
-        zonas.get(zona).setearPartidos(partidosZona);
-    }
     public void setearPartidoZona (PartidoDTO partidoDTO) {
         for (int i = 0; i < zonas.size(); i++) {
 
         }
     }
-    public void sumarPunto (Zona zona, Partido partido, Pareja pareja){
+    /*public void sumarPunto (Zona zona, Partido partido, Pareja pareja){
         for (int i = 0; i < zonas.size() ; i++) {
             if (zonas.get(i).equals(zona)) {
                 for (int j = 0; i < zonas.get(i).getPartidos().size(); j++) {
@@ -89,5 +86,5 @@ public class Torneo {
                 }
             }
         }
-    }
+    }*/
 }

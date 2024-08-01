@@ -72,4 +72,8 @@ public class TorneoController {
     public Pareja crearPareja (JugadorEntity jugador1, JugadorEntity jugador2) {
         return new Pareja(jugador1,jugador2);
     }
+
+    public void setearResultadoPartido (@RequestBody Map<String, Object> request) {
+
+    }
 }
