@@ -19,7 +19,6 @@ public class Partido {
     private int setsAJugar;
     private LocalDate date;
     private PartidoState partidoState;
-    private Torneo torneo;
     private Pareja pareja1;
     private Pareja pareja2;
     private List<Integer> setsPareja1;
@@ -27,8 +26,7 @@ public class Partido {
     private Set setEnCurso;
     private Pareja ganador;
 
-    public Partido(Torneo torneo, Pareja pareja1, Pareja pareja2, int setsAJugar) {
-        this.torneo = torneo;
+    public Partido(Pareja pareja1, Pareja pareja2, int setsAJugar) {
         this.pareja1 = pareja1;
         this.pareja2 = pareja2;
         this.partidoState = new PartidoSinIniciar(this);
@@ -88,5 +86,21 @@ public class Partido {
             this.ganador = this.pareja1;
         } else this.ganador = this.pareja2;
         finalizarPartido();
+    }
+
+    public PartidoDTO partidoToDTO () {
+        PartidoDTO partidoDTO = new PartidoDTO(this.getPareja1(), this.getPareja2());
+        if (this.partidoState instanceof PartidoSinIniciar) {
+            partidoDTO.setPartidoState(PartidoEnum.SinIniciar);
+        } else if (this.partidoState instanceof PartidoEnCurso) {
+            partidoDTO.setPartidoState(PartidoEnum.EnCurso);
+            partidoDTO.setSetsPareja1(this.getSetsPareja1());
+            partidoDTO.setSetsPareja2(this.getSetsPareja2());
+        } else if (this.partidoState instanceof PartidoFinalizado) {
+        partidoDTO.setPartidoState(PartidoEnum.Finalizado);
+        partidoDTO.setSetsPareja1(this.getSetsPareja1());
+        partidoDTO.setSetsPareja2(this.getSetsPareja2());
+        }
+        return partidoDTO;
     }
 }

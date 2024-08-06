@@ -11,6 +11,7 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -26,7 +27,8 @@ public class Torneo {
         this.zonas = zonas != null ? zonas : new ArrayList<>();
     }
     public Torneo(){}
-    public List<Zona> crearZonas () {
+
+    public List<Zona> crearZonas (int sizeOfMatchs) {
         int size = this.jugadores.size();
         int zonasDe4 = size / 4;
         int parejasRestantes = size % 4;
@@ -43,12 +45,11 @@ public class Torneo {
         // primero recorremos las zonas de 3, para que los que tienen mejor ranking, tengan solamente 2 partidos.
         for (int i = 0; i < zonasDe3; i++) {
             // Aca creamos la cantidad necesaria de zonas de 3
-            Zona zona = new Zona(this);
+            Zona zona = new Zona(sizeOfMatchs);
             //Aca rellenamos las zonas de 3
-            HashMap<Integer, Pareja> tempZona = new HashMap<>();
+            List<Pareja> tempZona = new ArrayList<>();
             for (int j = 0 ;j < 3; j++) {
-                System.out.println(jugadores.get(countParejas));
-                tempZona.put(countParejas,jugadores.get(countParejas));
+                tempZona.add(jugadores.get(countParejas));
                 countParejas++;
             }
             zona.setJugadores(tempZona);
@@ -57,11 +58,11 @@ public class Torneo {
         }
         for (int i = 0; i <= zonasDe4; i++) {
             // Aca creamos la cantidad necesaria de zonas de 4
-            Zona zona = new Zona(this);
+            Zona zona = new Zona(sizeOfMatchs);
             //Aca rellenamos las zonas de 4
-            HashMap<Integer, Pareja> tempZona = new HashMap<>();
+            List<Pareja> tempZona = new ArrayList<>();
             for (int j = 0 ; j < 4; j++) {
-                tempZona.put(countParejas,jugadores.get(countParejas));
+                tempZona.add(jugadores.get(countParejas));
                 countParejas++;
             }
             zona.setJugadores(tempZona);
@@ -69,6 +70,11 @@ public class Torneo {
             countZonas++;
         }
         return this.zonas;
+    }
+    public void createMatchsOfZone () {
+        for (int i = 0; i < this.zonas.size(); i++) {
+            this.zonas.get(i).createMatchs();
+        }
     }
     public void setearPartidoZona (PartidoDTO partidoDTO) {
         for (int i = 0; i < zonas.size(); i++) {

@@ -18,9 +18,7 @@ public class ZonaDTO {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private List<PartidoDTO> partidos;
-    private TorneoDTO torneo;
-    public ZonaDTO (TorneoDTO torneo) {
+    public ZonaDTO () {
         this.id = nextId++;
-        this.torneo = torneo;
     }
 }

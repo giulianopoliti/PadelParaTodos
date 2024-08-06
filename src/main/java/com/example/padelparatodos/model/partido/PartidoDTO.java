@@ -14,11 +14,23 @@ public class PartidoDTO {
     private Pareja pareja2;
     private List<Integer> setsPareja1;
     private List<Integer> setsPareja2;
-
+    private PartidoEnum partidoState;
+    public PartidoDTO(Pareja pareja1, Pareja pareja2, int setsPareja1, int setsPareja2, PartidoEnum partidoState) {
+        this.pareja1 = pareja1;
+        this.pareja2 = pareja2;
+        this.setsPareja1 = new ArrayList<>();
+        this.setsPareja2 = new ArrayList<>();
+        this.partidoState = partidoState;
+    }
     public PartidoDTO(Pareja pareja1, Pareja pareja2, int setsPareja1, int setsPareja2) {
         this.pareja1 = pareja1;
         this.pareja2 = pareja2;
         this.setsPareja1 = new ArrayList<>();
         this.setsPareja2 = new ArrayList<>();
     }
+    public PartidoDTO(Pareja pareja1, Pareja pareja2) {
+        this.pareja1 = pareja1;
+        this.pareja2 = pareja2;
+    }
+
 }

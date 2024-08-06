@@ -3,6 +3,8 @@ package com.example.padelparatodos.controller;
 import com.example.padelparatodos.entity.CategoriaEntity;
 import com.example.padelparatodos.entity.JugadorEntity;
 import com.example.padelparatodos.model.ParejaDTO;
+import com.example.padelparatodos.model.partido.Partido;
+import com.example.padelparatodos.model.partido.PartidoDTO;
 import com.example.padelparatodos.model.torneo.Torneo;
 import com.example.padelparatodos.model.Zona;
 import com.example.padelparatodos.model.Pareja;
@@ -37,7 +39,7 @@ public class TorneoController {
             int score1 = pareja1.getJugador1().getScore() + pareja1.getJugador2().getScore();
             int score2 = pareja2.getJugador1().getScore() + pareja2.getJugador2().getScore();
 
-            return Integer.compare(score1, score2); // Orden descendente
+            return Integer.compare(score2, score1); // Orden descendente
         });
 
         // Crear un LinkedHashMap para mantener el orden de las parejas ordenadas
@@ -50,30 +52,57 @@ public class TorneoController {
     }
 
     @PostMapping("/crear")
-    public Torneo crearTorneo (@RequestBody Map<String, Object> request) {
+    public void crearTorneo (@RequestBody Map<String, Object> request) {
         Map<String, Map<String, Map<String, Object>>> parejasDTO = (Map<String, Map<String, Map<String, Object>>>) request.get("parejas");
         HashMap<Integer, Pareja> parejas = new HashMap<>();
         Integer idCategoria = (Integer) request.get("idCategoria");
         int count = 0;
+        Set<JugadorEntity> jugadoresRegistrados = new HashSet<>(); // Conjunto para verificar jugadores registrados
         for (Map.Entry<String, Map<String, Map<String, Object>>> entry: parejasDTO.entrySet()) {
             String parejaKey = entry.getKey();
             Map<String, Map<String, Object>> parejaData = entry.getValue();
-
             JugadorEntity jugadorEntity1 = jugadorService.findByNameAndLastName((String)entry.getValue().get("jugador1").get("name"), (String)entry.getValue().get("jugador1").get("lastName"));
             JugadorEntity jugadorEntity2 = jugadorService.findByNameAndLastName((String)entry.getValue().get("jugador2").get("name"), (String)entry.getValue().get("jugador2").get("lastName"));
+            if (jugadoresRegistrados.contains(jugadorEntity1) || jugadoresRegistrados.contains(jugadorEntity2)) {
+                throw new RuntimeException("Error, un jugador ya esta registrado.");
+            }
+            jugadoresRegistrados.add(jugadorEntity1);
+            jugadoresRegistrados.add(jugadorEntity2);
             parejas.put(count,new Pareja(jugadorEntity1,jugadorEntity2));
             count++;
         }
         parejas = ordenarParejas(parejas);
         CategoriaEntity categoriaEntity = categoriaService.buscarCategoria(idCategoria);
         this.torneo = new Torneo(parejas,categoriaEntity,null);
-        torneo.crearZonas();
-        return torneo;
+    }
+    @PostMapping("/zonas/crear")
+    public void createZones (@RequestParam int sizeOfMatchs) {
+        this.torneo.crearZonas(sizeOfMatchs);
     }
 
-    @GetMapping ("/zonas")
+    @GetMapping ("/zonas/get")
     public List<Zona> getTorneo () {
         return this.torneo.getZonas();
+    }
+    @PostMapping ("zonas/partidos/crear")
+    public void createMatchs () {
+        this.torneo.createMatchsOfZone();
+    }
+    @GetMapping("/zonas/partidos/get")
+    public HashMap<Integer, List<PartidoDTO>> getPartidosOfZones () {
+        HashMap<Integer, List<PartidoDTO>> partidos = new HashMap<>();
+        for (int i = 0; i < this.torneo.getZonas().size(); i++) {
+            List<PartidoDTO> partidosDTOs = new ArrayList<>();
+            for (int j = 0; j < this.torneo.getZonas().get(i).getPartidos().size(); j++) {
+                partidosDTOs.add(j, this.torneo.getZonas().get(i).getPartidos().get(j).partidoToDTO());
+            }
+            partidos.put(i,partidosDTOs);
+        }
+        return partidos;
+    }
+    @GetMapping("/size")
+    public Integer getSizeOfMatchs () {
+        return this.torneo.getZonas().get(0).getSizeOfMatchs();
     }
 
     /*
