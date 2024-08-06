@@ -1,7 +1,13 @@
 package com.example.padelparatodos.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 @Entity
+@Table(name = "Pareja")
+@Getter
+@Setter
 public class ParejaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

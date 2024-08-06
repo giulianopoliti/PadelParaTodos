@@ -1,17 +1,38 @@
 package com.example.padelparatodos.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
-import java.time.LocalDate;
+import java.util.Date;
+import java.util.List;
+
 @Entity
+@Getter
+@Setter
+@Table(name = "Torneo")
 public class TorneoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String name;
-    private LocalDate date;
+
+    @Column(nullable = false)
+    private String nombre;
+
+    @ManyToOne
+    @JoinColumn(name = "categoria_id", nullable = false)
+    private CategoriaEntity categoria;
+
+    @Temporal(TemporalType.DATE)
+    private Date fechaInicio;
+
+    @Temporal(TemporalType.DATE)
+    private Date fechaFin;
+
+    @OneToMany(mappedBy = "torneoEntity")
+    private List<PartidoEntity> partidos;
+
+    @OneToMany(mappedBy = "torneoEntity")
+    private List<ParejaEntity> parejas;
 }
+
