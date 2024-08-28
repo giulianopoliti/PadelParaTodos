@@ -7,13 +7,13 @@ import lombok.Setter;
 @Setter
 
 public class JugadorDTO {
+    private int id;
     private String name;
     private String lastName;
-    private int idCategoria;
 
-    public JugadorDTO(String name, String lastName, int idCategoria) {
+    public JugadorDTO(int id,String name, String lastName) {
+        this.id = id;
         this.name = name;
         this.lastName = lastName;
-        this.idCategoria = idCategoria;
     }
 }

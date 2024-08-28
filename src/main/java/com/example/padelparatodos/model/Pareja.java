@@ -8,11 +8,15 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Pareja {
-    private JugadorEntity jugador1;
-    private JugadorEntity jugador2;
+    private Jugador jugador1;
+    private Jugador jugador2;
 
-    public Pareja(JugadorEntity jugador1, JugadorEntity jugador2) {
+    public Pareja(Jugador jugador1, Jugador jugador2) {
         this.jugador1 = jugador1;
         this.jugador2 = jugador2;
+    }
+    public ParejaDTO toDTO () {
+        ParejaDTO parejaDTO = new ParejaDTO(this.getJugador1().jugadorToDTO(), this.getJugador2().jugadorToDTO());
+        return parejaDTO;
     }
 }

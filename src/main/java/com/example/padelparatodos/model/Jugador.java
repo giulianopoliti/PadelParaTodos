@@ -47,4 +47,8 @@ public class Jugador implements Subject{
             observer.update();
         }
     }
+    public JugadorDTO jugadorToDTO () {
+        JugadorDTO jugadorDTO = new JugadorDTO(this.getId(), this.getLastName(), this.getName());
+        return jugadorDTO;
+    }
 }

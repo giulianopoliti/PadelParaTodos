@@ -21,10 +21,6 @@ public class PartidoEntity {
     private ParejaEntity pareja2;
 
     @ManyToOne
-    @JoinColumn
-    private ParejaEntity ganador;
-
-    @ManyToOne
     @JoinColumn(name = "torneo_Id")
     private TorneoEntity torneoEntity;
 
